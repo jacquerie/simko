@@ -2,12 +2,12 @@ module.exports = function( grunt ) {
   grunt.initConfig( {
     jscs: {
       all: {
-        src: [ "Gruntfile.js" ]
+        src: [ "Gruntfile.js", "js/application.js" ]
       }
     },
     jshint: {
       all: {
-        src: [ "Gruntfile.js" ],
+        src: [ "Gruntfile.js", "js/application.js" ],
         options: {
           jshintrc: true
         }
@@ -15,7 +15,7 @@ module.exports = function( grunt ) {
     },
     jsonlint: {
       pkg: {
-        src: [ "package.json", "data/tibor-mock.json" ]
+        src: [ ".jscsrc", ".jshintrc", "package.json", "data/tibor-mock.json" ]
       }
     }
   } );
