@@ -42,7 +42,9 @@ d3.csv( "data/tibor-mock.csv", function( error, data ) {
 
   data.sort( function( a, b ) { return a.total - b.total; } );
 
-  x.domain( [ 0, d3.max( data, function( d ) { return d.total; } ) ] );
+  var totals = data.map( function( d ) { return d.total; } );
+
+  x.domain( [ 0, d3.max( totals ) ] );
   y.domain( data.map( function( d ) { return d.File; } ) );
 
   svg.append( "g" )
@@ -91,5 +93,23 @@ d3.csv( "data/tibor-mock.csv", function( error, data ) {
       .attr( "dy", ".35em" )
       .style( "text-anchor", "end" )
       .text( function( d ) { return d; } );
+
+  var median = d3.median( totals ),
+      toAdd = data.filter( function( d ) { return d.total > median && d.L1 == 0; } ),
+      toRemove = data.filter( function( d ) { return d.total < median && d.L1 > 0; } );
+
+  d3.select( ".to-add" )
+    .selectAll( "li" )
+      .data( toAdd )
+    .enter()
+      .append( "li" )
+      .html( function( d ) { return d.File; } );
+
+  d3.select( ".to-remove" )
+    .selectAll( "li" )
+      .data( toRemove )
+    .enter()
+      .append( "li" )
+      .html( function( d ) { return d.File; } );
 
 } );
