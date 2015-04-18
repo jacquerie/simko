@@ -1,0 +1,4 @@
+File,L1,L2,miss,picked
+foo.png,1000,100,10,false
+bar.png,2000,0,0,true
+baz.png,500,500,50,false
