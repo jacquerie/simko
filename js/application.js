@@ -95,7 +95,7 @@ d3.csv( "data/tibor-mock.csv", function( error, data ) {
       .text( function( d ) { return d; } );
 
   var median = d3.median( totals ),
-      toAdd = data.filter( function( d ) { return d.total > median && d.L1 == 0; } ),
+      toAdd = data.filter( function( d ) { return d.total > median && d.L1 <= d.L2; } ),
       toRemove = data.filter( function( d ) { return d.total < median && d.L1 > 0; } );
 
   d3.select( ".to-add" )
