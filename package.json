@@ -1,0 +1,16 @@
+{
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/jacquerie/tibor-simko.git"
+  },
+  "dependencies": {
+    "lodash": "^3.6.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-jscs": "^1.5.0",
+    "grunt-jsonlint": "^1.0.4",
+    "load-grunt-tasks": "^3.1.0"
+  }
+}
