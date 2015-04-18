@@ -1,0 +1,21 @@
+[
+  {
+    "name": "foo.png",
+    "L1": 1000,
+    "L2": 1000,
+    "miss": 10,
+    "picked": true
+  },
+  {
+    "name": "bar.png",
+    "L1": 750,
+    "L2": 500,
+    "miss": 5
+  },
+  {
+    "name": "baz.png",
+    "L1": 500,
+    "L2": 500,
+    "miss": 5
+  }
+]
