@@ -13,11 +13,7 @@ body {
   shape-rendering: crispEdges;
 }
 
-.bar {
-  fill: steelblue;
-}
-
-.x.axis path {
+.y.axis path {
   display: none;
 }
 

@@ -1,23 +1,23 @@
-var margin = { top: 20, right: 20, bottom: 30, left: 40 },
+var margin = { top: 30, right: 20, bottom: 20, left: 80 },
     width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    height = 600 - margin.top - margin.bottom;
 
-var x = d3.scale.ordinal()
-  .rangeRoundBands( [ 0, width ], 0.1 );
+var x = d3.scale.linear()
+  .rangeRound( [ 0, width ] );
 
-var y = d3.scale.linear()
-  .rangeRound( [ height, 0 ] );
+var y = d3.scale.ordinal()
+  .rangeRoundBands( [ height, 0 ], 0.1 );
 
-var color = d3.scale.category20b();
+var color = d3.scale.category20();
 
 var xAxis = d3.svg.axis()
     .scale( x )
-    .orient( "bottom" );
+    .orient( "top" )
+    .tickFormat( d3.format( ".2s" ) );
 
 var yAxis = d3.svg.axis()
     .scale( y )
-    .orient( "left" )
-    .tickFormat( d3.format( ".2s" ) );
+    .orient( "left" );
 
 var svg = d3.select( "svg" )
     .attr( "width", width + margin.left + margin.right )
@@ -31,23 +31,22 @@ d3.csv( "data/tibor-mock.csv", function( error, data ) {
   } ) );
 
   data.forEach( function( d ) {
-    var y0 = 0;
+    var x0 = 0;
 
     d.hits = color.domain().map( function( name ) {
-      return { "name": name, "y0": y0, "y1": y0 += +d[name] };
+      return { "name": name, "x0": x0, "x1": x0 += +d[name] };
     } );
 
-    d.total = d.hits[d.hits.length - 1].y1;
+    d.total = d.hits[d.hits.length - 1].x1;
   } );
 
-  data.sort( function( a, b ) { return b.total - a.total; } );
+  data.sort( function( a, b ) { return a.total - b.total; } );
 
-  x.domain( data.map( function( d ) { return d.File; } ) );
-  y.domain( [ 0, d3.max( data, function( d ) { return d.total; } ) ] );
+  x.domain( [ 0, d3.max( data, function( d ) { return d.total; } ) ] );
+  y.domain( data.map( function( d ) { return d.File; } ) );
 
   svg.append( "g" )
       .attr( "class", "x axis" )
-      .attr( "transform", "translate(0," + height + ")" )
       .call( xAxis );
 
   svg.append( "g" )
@@ -63,31 +62,32 @@ d3.csv( "data/tibor-mock.csv", function( error, data ) {
       .data( data )
     .enter().append( "g" )
       .attr( "class", "g" )
-      .attr( "transform", function( d ) { return "translate(" + x( d.File ) + ",0)"; } );
+      .attr( "transform", function( d ) { return "translate(0, " + y( d.File ) + ")"; } );
 
   file.selectAll( "rect" )
       .data( function( d ) { return d.hits; } )
     .enter().append( "rect" )
-      .attr( "width", x.rangeBand() )
-      .attr( "y", function( d ) { return y( d.y1 ); } )
-      .attr( "height", function( d ) { return y( d.y0 ) - y( d.y1 ); } )
+      .attr( "height", y.rangeBand() )
+      .attr( "x", function( d ) { return x( d.x0 ); } )
+      .attr( "width", function( d ) { return x( d.x1 ) - x( d.x0 ); } )
       .style( "fill", function( d ) { return color( d.name ); } );
 
   var legend = svg.selectAll( ".legend" )
-      .data( color.domain().slice().reverse() )
+      .data( color.domain().slice() )
     .enter().append( "g" )
       .attr( "class", "legend" )
       .attr( "transform", function( d, i ) { return "translate(0," + i * 20 + ")"; } );
 
   legend.append( "rect" )
-      .attr( "x", width - 18 )
+      .attr( "x", width - 39 )
+      .attr( "y", height - 57 )
       .attr( "width", 18 )
       .attr( "height", 18 )
       .style( "fill", color );
 
   legend.append( "text" )
-      .attr( "x", width - 24 )
-      .attr( "y", 9 )
+      .attr( "x", width - 48 )
+      .attr( "y", height - 48 )
       .attr( "dy", ".35em" )
       .style( "text-anchor", "end" )
       .text( function( d ) { return d; } );
