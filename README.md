@@ -4,7 +4,6 @@ WIP
 
 ## Authors ##
 
- * Marios Kogias
  * Daniel Lovasko
  * Jacopo Notarstefano
  * Laura Rueda
