@@ -15,14 +15,18 @@ ALPHABET = [
 ]
 
 with open("tibor-mock.csv", "w") as f:
-    f.write("File,L1,L2,miss\n")
+    f.write("File,L1,L2,Misses\n")
 
     for i in range(int(sys.argv[1])):
         shuffle(ALPHABET)
 
         filename = "".join(ALPHABET)[:3] + ".png"
-        L1 = randint(1, int(sys.argv[2]))
-        L2 = randint(1, int(sys.argv[3]))
-        miss = randint(1, int(sys.argv[4]))
+
+        L1, L2, miss = 0, 0, 0
+        if randint(1, int(sys.argv[2])) % 4 != 0:
+            L1 = randint(1, int(sys.argv[2]))
+            L2 = randint(1, int(sys.argv[3]))
+        else:
+            miss = randint(1, int(sys.argv[4]))
 
         f.write("%s,%d,%d,%d\n" % (filename, L1, L2, miss))
