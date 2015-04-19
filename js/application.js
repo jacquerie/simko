@@ -67,7 +67,7 @@ d3.csv( "data/tibor-mock.csv?" + Math.floor( 1000 * Math.random() ), function( e
 
   var totals = data.map( function( d ) { return d.total; } ),
       median = d3.median( totals ),
-      toAdd = data.filter( function( d ) { return d.total > median && d.L1 === 0; } ),
+      toAdd = data.filter( function( d ) { return d.total > median && d.L1 == 0; } ),
       toRemove = data.filter( function( d ) { return d.total < median && d.L1 > 0; } );
 
   updateSuggestions( toAdd, toRemove );
