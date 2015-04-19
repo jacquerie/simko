@@ -1,6 +1,6 @@
 var margin = { top: 30, right: 20, bottom: 20, left: 80 },
     width = 960 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    height = 800 - margin.top - margin.bottom;
 
 var x = d3.scale.linear()
   .rangeRound( [ 0, width ] );
@@ -25,7 +25,30 @@ var svg = d3.select( "svg" )
   .append( "g" )
     .attr( "transform", "translate(" + margin.left + "," + margin.top + ")" );
 
-d3.csv( "data/tibor-mock.csv", function( error, data ) {
+var updateLead = function() {
+  d3.select( ".lead" )
+    .html( function() {
+      return Math.random() > 0.001 ? "Less is more." : "My way, or fuck you!"
+    } );
+};
+
+var updateSuggestions = function( toAdd, toRemove ) {
+  d3.select( ".to-add" )
+    .selectAll( "li" )
+      .data( toAdd )
+    .enter()
+      .append( "li" )
+      .html( function( d ) { return d.File; } );
+
+  d3.select( ".to-remove" )
+    .selectAll( "li" )
+      .data( toRemove )
+    .enter()
+      .append( "li" )
+      .html( function( d ) { return d.File; } );
+};
+
+d3.csv( "data/tibor-mock.csv?" + Math.floor( 1000 * Math.random() ), function( error, data ) {
   color.domain( d3.keys( data[0] ).filter( function( key ) {
     return key !== "File";
   } ) );
@@ -42,7 +65,12 @@ d3.csv( "data/tibor-mock.csv", function( error, data ) {
 
   data.sort( function( a, b ) { return a.total - b.total; } );
 
-  var totals = data.map( function( d ) { return d.total; } );
+  var totals = data.map( function( d ) { return d.total; } ),
+      median = d3.median( totals ),
+      toAdd = data.filter( function( d ) { return d.total > median && d.L1 == 0; } ),
+      toRemove = data.filter( function( d ) { return d.total < median && d.L1 > 0; } );
+
+  updateSuggestions(toAdd, toRemove);
 
   x.domain( [ 0, d3.max( totals ) ] );
   y.domain( data.map( function( d ) { return d.File; } ) );
@@ -93,23 +121,5 @@ d3.csv( "data/tibor-mock.csv", function( error, data ) {
       .attr( "dy", ".35em" )
       .style( "text-anchor", "end" )
       .text( function( d ) { return d; } );
-
-  var median = d3.median( totals ),
-      toAdd = data.filter( function( d ) { return d.total > median && d.L1 <= d.L2; } ),
-      toRemove = data.filter( function( d ) { return d.total < median && d.L1 > 0; } );
-
-  d3.select( ".to-add" )
-    .selectAll( "li" )
-      .data( toAdd )
-    .enter()
-      .append( "li" )
-      .html( function( d ) { return d.File; } );
-
-  d3.select( ".to-remove" )
-    .selectAll( "li" )
-      .data( toRemove )
-    .enter()
-      .append( "li" )
-      .html( function( d ) { return d.File; } );
 
 } );
