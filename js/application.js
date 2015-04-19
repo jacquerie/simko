@@ -28,7 +28,7 @@ var svg = d3.select( "svg" )
 var updateLead = function() {
   d3.select( ".lead" )
     .html( function() {
-      return Math.random() > 0.001 ? "Less is more." : "My way, or fuck you!"
+      return Math.random() > 0.001 ? "Less is more." : "My way, or fuck you!";
     } );
 };
 
@@ -67,10 +67,11 @@ d3.csv( "data/tibor-mock.csv?" + Math.floor( 1000 * Math.random() ), function( e
 
   var totals = data.map( function( d ) { return d.total; } ),
       median = d3.median( totals ),
-      toAdd = data.filter( function( d ) { return d.total > median && d.L1 == 0; } ),
+      toAdd = data.filter( function( d ) { return d.total > median && d.L1 === 0; } ),
       toRemove = data.filter( function( d ) { return d.total < median && d.L1 > 0; } );
 
-  updateSuggestions(toAdd, toRemove);
+  updateSuggestions( toAdd, toRemove );
+  updateLead();
 
   x.domain( [ 0, d3.max( totals ) ] );
   y.domain( data.map( function( d ) { return d.File; } ) );
